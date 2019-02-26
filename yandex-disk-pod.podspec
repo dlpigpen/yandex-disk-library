@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "yandex-disk-pod"
-  spec.version      = "0.0.3"
+  spec.version      = "0.0.4"
   spec.summary      = "A other version of yandex disk pod. Helper-Framework that save your time to work with cloud storage services"
 
   # This description is used to generate tags and improve search results.
@@ -121,7 +121,7 @@ Pod::Spec.new do |spec|
   spec.header_dir = 'YandexDisk'
 
   # spec.library   = "iconv"
-  # spec.libraries = "iconv", "xml2"
+  spec.libraries =  "xml2"
   spec.static_framework = true
 
   spec.xcconfig = { "OTHER_LDFLAGS": "-ObjC -all_load" }
