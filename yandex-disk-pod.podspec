@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "yandex-disk-pod"
-  spec.version      = "0.0.2"
+  spec.version      = "0.0.3"
   spec.summary      = "A other version of yandex disk pod. Helper-Framework that save your time to work with cloud storage services"
 
   # This description is used to generate tags and improve search results.
@@ -93,7 +93,7 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "YandexDisk/sdk/*.{h,m}", "YandexDisk/sdk/**/*.{h,m}", "YandexDisk/KissXML/KissXML/*.{h,m}", "YandexDisk/KissXML/KissXML/**/*.{h,m}"
  
-  spec.public_header_files = "YandexDisk/YandexDisk/*.h", "YandexDisk/YandexDisk/**/*.h"
+  # spec.public_header_files = "YandexDisk/YandexDisk/*.h", "YandexDisk/YandexDisk/**/*.h"
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
