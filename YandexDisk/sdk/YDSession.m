@@ -457,6 +457,39 @@
                                                                      userInfo:userInfo];
 }
 
+-(void)getItemURLByPath:(NSString *) path completion: (YDFetchLinkURLHandler) block {
+    
+    NSString *urlStr = [NSString stringWithFormat:@"https://cloud-api.yandex.net/v1/disk/resources/download?path=%@", path];
+    
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
+    
+    //create the Method "GET"
+    NSString *oathToken = [NSString stringWithFormat:@"OAuth %@", self.OAuthToken];
+    [urlRequest setHTTPMethod:@"GET"];
+    [urlRequest setValue: oathToken forHTTPHeaderField:@"Authorization"];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+    {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        if(httpResponse.statusCode == 200)
+        {
+            NSError *parseError = nil;
+            NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
+            if (responseDictionary != nil) {
+                block(nil, responseDictionary[@"href"]);
+            }
+        }
+        else
+        {
+            block(error, nil);
+        }
+    }];
+    [dataTask resume];
+}
+
+
 - (void)publishItemAtPath:(NSString *)aPath completion:(YDPublishHandler)block
 {
     NSURL *path = [YDSession urlForDiskPath:aPath];

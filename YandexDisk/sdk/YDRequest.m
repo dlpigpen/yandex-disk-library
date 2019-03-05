@@ -80,12 +80,12 @@
 
 	NSAssert1(req != nil, @"%@ failed to build HTTP request.", self);
 	if (req == nil) {
-        NSLog(@"%@ failed to build HTTP request.", self);
+//        NSLog(@"%@ failed to build HTTP request.", self);
 		return;
 	}
 
     if ( req.HTTPBody.length > 0) {
-        NSLog(@"BODY: %@", [[NSString alloc] initWithData:req.HTTPBody encoding:NSUTF8StringEncoding]);
+//        NSLog(@"BODY: %@", [[NSString alloc] initWithData:req.HTTPBody encoding:NSUTF8StringEncoding]);
     }
 
 	_connection = [[NSURLConnection alloc] initWithRequest:req
@@ -199,7 +199,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 
 - (void)connection:(NSURLConnection *)aConnection didReceiveData:(NSData *)data
 {
-	NSLog(@"%@ did receive some data (%llu)", self, _receivedDataLength + data.length);
+//    NSLog(@"%@ did receive some data (%llu)", self, _receivedDataLength + data.length);
 
     if (self.isCanceled) {
         [self cancel];
@@ -294,10 +294,10 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 
     if (self.fileHandle != nil) {
         [self.fileHandle closeFile];
-        NSLog(@"DATA stored at: %@", self.fileURL.path);
+//        NSLog(@"DATA stored at: %@", self.fileURL.path);
     }
     else if (self.receivedData.length > 0) {
-        NSLog(@"DATA: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+//        NSLog(@"DATA: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     }
 
     // Call delegate callback

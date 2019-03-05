@@ -7,6 +7,11 @@
 #import "YDItemStat.h"
 #import "YDSessionDelegate.h"
 
+typedef void (^YDFetchLinkURLHandler)(NSError *err, NSString *href);
+
+
+
+
 
 /**
  @abstract Completion block for fetchStatusForPath:completion: .
@@ -312,5 +317,7 @@ typedef void (^YDHandler)(NSError *err);
     A handler block as described for YDHandler.
  */
 - (void)unpublishItemAtPath:(NSString *)path completion:(YDHandler)block;
+
+- (void)getItemURLByPath:(NSString *) path completion: (YDFetchLinkURLHandler) block;;
 
 @end

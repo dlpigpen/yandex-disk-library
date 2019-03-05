@@ -45,6 +45,10 @@
     [super viewDidLoad];
 
     [self setTitle:@"Sign-In"];
+    
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36", @"UserAgent", nil];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:dictionary];
+    
     NSURL *url = [NSURL URLWithString:self.authURI];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
 
@@ -101,7 +105,7 @@
 
 - (NSString *)authURI
 {
-    return [NSString stringWithFormat:@"https://oauth.yandex.ru/authorize?response_type=token&client_id=%@&display=popup", self.delegate.clientID];
+    return [NSString stringWithFormat:@"https://oauth.yandex.com/authorize?response_type=token&client_id=%@&display=popup", self.delegate.clientID];
 }
 
 - (void)handleResult
