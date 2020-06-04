@@ -71,7 +71,7 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     
-    if (navigationAction.navigationType == UIWebViewNavigationTypeLinkClicked) {
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
         NSString *uri = navigationAction.request.URL.absoluteString;
         if ([uri hasPrefix:self.delegate.redirectURL]) { // did we get redirected to the redirect url?
             NSArray *split = [uri componentsSeparatedByString:@"#"];
@@ -99,11 +99,9 @@
             [self handleResult];
         }
         decisionHandler(WKNavigationActionPolicyCancel);
+    } else {
+        decisionHandler(WKNavigationActionPolicyAllow);
     }
-    
-
-
-    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 
