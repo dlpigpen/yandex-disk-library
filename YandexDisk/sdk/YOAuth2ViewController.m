@@ -107,37 +107,6 @@
 }
 
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    NSString *uri = request.URL.absoluteString;
-    if ([uri hasPrefix:self.delegate.redirectURL]) { // did we get redirected to the redirect url?
-        NSArray *split = [uri componentsSeparatedByString:@"#"];
-        NSString *param = split[1];
-        split = [param componentsSeparatedByString:@"&"];
-        NSMutableDictionary *paraDict = [NSMutableDictionary dictionary];
-
-        for (NSString *s in split) {
-            NSArray *kv = [s componentsSeparatedByString:@"="];
-            if (kv) {
-                paraDict[kv[0]] = kv[1];
-            }
-        }
-
-        if (paraDict[@"access_token"]) {
-            self.token = paraDict[@"access_token"];
-            self.done = YES;
-        }
-        else if (paraDict[@"error"]) {
-            self.error = [NSError errorWithDomain:kYDSessionAuthenticationErrorDomain
-                                             code:kYDSessionErrorUnknown
-                                         userInfo:paraDict];
-            self.done = YES;
-        }
-        [self handleResult];
-    }
-    return !self.done;
-}
-
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     if (!self.done) {
            NSLog(@"%@", error.localizedDescription);
