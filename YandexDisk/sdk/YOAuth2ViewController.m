@@ -6,13 +6,13 @@
 #import "YOAuth2ViewController.h"
 #import "NSNotificationCenter+Additions.h"
 #import "YDConstants.h"
-
+#import <WebKit/WebKit.h>
 
 @interface YOAuth2ViewController ()
 
 @property (nonatomic, assign) BOOL appeared;
 @property (nonatomic, assign) BOOL done;
-@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, copy, readwrite) NSString *token;
 
@@ -35,8 +35,13 @@
 
 - (void)loadView
 {
-    self.webView = [[UIWebView alloc] init];
-    self.webView.delegate = self;
+    WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration: webConfiguration];
+
+    self.webView = webView;
+    self.webView.UIDelegate = self;
+    self.webView.navigationDelegate = self;
+
     self.view = self.webView;
 }
 
@@ -63,6 +68,44 @@
 }
 
 #pragma mark - UIWebViewDelegate methods
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    
+    if (navigationAction.navigationType == UIWebViewNavigationTypeLinkClicked) {
+        NSString *uri = navigationAction.request.URL.absoluteString;
+        if ([uri hasPrefix:self.delegate.redirectURL]) { // did we get redirected to the redirect url?
+            NSArray *split = [uri componentsSeparatedByString:@"#"];
+            NSString *param = split[1];
+            split = [param componentsSeparatedByString:@"&"];
+            NSMutableDictionary *paraDict = [NSMutableDictionary dictionary];
+
+            for (NSString *s in split) {
+                NSArray *kv = [s componentsSeparatedByString:@"="];
+                if (kv) {
+                    paraDict[kv[0]] = kv[1];
+                }
+            }
+
+            if (paraDict[@"access_token"]) {
+                self.token = paraDict[@"access_token"];
+                self.done = YES;
+            }
+            else if (paraDict[@"error"]) {
+                self.error = [NSError errorWithDomain:kYDSessionAuthenticationErrorDomain
+                                                 code:kYDSessionErrorUnknown
+                                             userInfo:paraDict];
+                self.done = YES;
+            }
+            [self handleResult];
+        }
+        decisionHandler(WKNavigationActionPolicyCancel);
+    }
+    
+
+
+    decisionHandler(WKNavigationActionPolicyAllow);
+}
+
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
@@ -95,11 +138,10 @@
     return !self.done;
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     if (!self.done) {
-        NSLog(@"%@", error.localizedDescription);
-        [self handleError:error];
+           NSLog(@"%@", error.localizedDescription);
+           [self handleError:error];
     }
 }
 

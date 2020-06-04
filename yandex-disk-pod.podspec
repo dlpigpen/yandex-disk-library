@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "yandex-disk-pod"
-  spec.version      = "0.0.5"
+  spec.version      = "0.0.6"
   spec.summary      = "A other version of yandex disk pod. Helper-Framework that save your time to work with cloud storage services"
 
   # This description is used to generate tags and improve search results.
